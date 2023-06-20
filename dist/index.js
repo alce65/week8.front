@@ -1,4 +1,5 @@
-"use strict";
+import { app } from './app.js';
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
 const url = 'http://localhost:4400';
 const storeName = 'Sample';
 function main() {
@@ -18,25 +19,30 @@ function main() {
         formLoginElement?.removeAttribute('hidden');
         logoutElement?.setAttribute('hidden', 'true');
     }
-    const register = (event) => {
+    const register = async (event) => {
         event.preventDefault();
         console.log('Registering');
-        const formDataRegister = new FormData(formRegisterElement);
-        // Temp
-        // const file = formDataRegister.get('avatar');
-        // console.log(file);
-        // const f: HTMLInputElement = formRegisterElement.elements.namedItem(
-        //   'avatar'
-        // ) as HTMLInputElement;
-        // formDataRegister.append('file', f.files![0]);
-        for (const obj of formDataRegister) {
-            console.log(obj);
-        }
-        const registerURl = url + '/user/register';
-        fetch(registerURl, {
-            method: 'POST',
-            body: formDataRegister,
-        });
+        const data = {
+            userName: formRegisterElement.elements.namedItem('userName').value,
+            email: formRegisterElement.elements.namedItem('email').value,
+            passwd: formRegisterElement.elements.namedItem('passwd').value,
+            avatar: '',
+        };
+        const fileInput = formRegisterElement.elements.namedItem('avatar');
+        const file = fileInput.files[0];
+        const storage = getStorage(app);
+        const storageRef = ref(storage, 'avatar');
+        const uploaded = await uploadBytes(storageRef, file);
+        console.log(uploaded.metadata);
+        data.avatar = uploaded.metadata.fullPath;
+        console.log(data);
+        // TEMP
+        // const registerURl = url + '/user/register';
+        // fetch(registerURl, {
+        //   method: 'POST',
+        //   headers: {'Content-type': 'application/json'},
+        //   body: JSON.stringify(data),
+        // });
     };
     const login = async (event) => {
         event.preventDefault();
