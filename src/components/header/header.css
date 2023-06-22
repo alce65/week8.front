@@ -1,0 +1,12 @@
+header {
+  padding: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: maroon;
+  color: bisque;
+}
+
+header span {
+  padding: 0 0.3rem;
+}

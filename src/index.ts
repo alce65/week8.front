@@ -22,58 +22,6 @@ function main() {
     logoutElement?.setAttribute('hidden', 'true');
   }
 
-  const register = (event: Event) => {
-    event.preventDefault();
-    console.log('Registering');
-
-    const formDataRegister = new FormData(formRegisterElement);
-
-    // Temp
-    // const file = formDataRegister.get('avatar');
-    // console.log(file);
-    // const f: HTMLInputElement = formRegisterElement.elements.namedItem(
-    //   'avatar'
-    // ) as HTMLInputElement;
-
-    // formDataRegister.append('file', f.files![0]);
-
-    for (const obj of formDataRegister) {
-      console.log(obj);
-    }
-
-    const registerURl = url + '/user/register';
-    fetch(registerURl, {
-      method: 'POST',
-      body: formDataRegister,
-    });
-  };
-
-  const login = async (event: Event) => {
-    event.preventDefault();
-
-    const { elements } = event.target! as HTMLFormElement;
-
-    const data = {
-      user: (elements.namedItem('user') as HTMLFormElement).value,
-      passwd: (elements.namedItem('passwd') as HTMLFormElement).value,
-    };
-
-    const urlLogin = url + '/user/login';
-    const response = await fetch(urlLogin, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    state = await response.json();
-
-    localStorage.setItem(storeName, JSON.stringify({ token: state.token }));
-    formLoginElement?.setAttribute('hidden', 'true');
-    logoutElement?.removeAttribute('hidden');
-    console.log(state);
-  };
-
   const logout = () => {
     localStorage.removeItem(storeName);
     state = {};
